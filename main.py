@@ -41,5 +41,37 @@ def match_task(text, audio):
     else:
         return ReferenceError("Please provide either text or audio input")
 
+def main():
+    demo = gr.Blocks()
+    with gr.Blocks(theme=gr.themes.Dark()) as demo:
+        gr.Markdown("## Language Learning Model")
+        gr.Markdown("### Assistant Task")
+        gr.Markdown("### What do you want to do: order food in the restaurant, ask for direction, buy tickets?")
+        gr.Markdown("### Record audio or enter text.")
+
+        with gr.Row():
+            with gr.Column():
+                text = gr.Textbox(label="Enter text", placeholder="order food, ask for directions, etc.")
+            with gr.Column():
+                audio = gr.Audio(sources=["microphone"], label="Record audio", type="filepath", max_length=10)
+        with gr.Row():
+            country = gr.Radio(["France", "Germany", "Italy", "Spain"], label="Location", info="Where are you travelling?")
+            num = gr.Slider(0, 10, value=5, step=1, info="How many phrases?", label="Number of phrases") 
+        
+        with gr.Row():
+            with gr.Column():
+                response = gr.Button("Generate response", variant="primary")
+            with gr.Column():
+                clear = gr.Button("Clear", variant="secondary")
+
+        with gr.Row():
+            out = gr.Textbox(label="Response", placeholder="Response will appear here", readonly=True)
+            task = match_task(text, audio)
+        
+        response.click(fn=llm, inputs=[task, country, num], outputs=out)
+        gr.ClearButton.add(clear, [text, audio, country, num, out])
+
+    demo.launch()
 
 if __name__ == "__main__":
+    main()
