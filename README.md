@@ -16,7 +16,7 @@ This project is an interactive application designed to help travelers communicat
 To run this project, you'll need Python installed on your machine along with the following packages:
 
 ```bash
-pip install gradio langchain_community whisper openai torch
+pip install gradio langchain-ollama whisper openai torch
 ```
 
 ## How to Use

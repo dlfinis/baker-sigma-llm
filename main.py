@@ -1,4 +1,4 @@
-from langchain_community.llms import Ollama
+from langchain_ollama import OllamaLLM
 import gradio as gr
 import json
 import whisper
@@ -15,9 +15,9 @@ def get_examples(file):
     return data
 
 def llm(task, country, number):
-    llm = Ollama(model="deepseek-r1")
-    lang = get_language(country, file="utils/country_languages.json")
-    few_shot = get_examples(file="utils/few_shot_examples.json")
+    llm = OllamaLLM(model="dolphin3:latest")
+    lang = get_language(country, file="utils/country_language.json")
+    few_shot = get_examples(file="utils/fewshot_learning.txt")
     context = f"You are a helpful assistant. You give an enumerated list of phrases. You answer concisely and only in {lang}"
     icl = f"For example, {few_shot}"
     query = f"I'm traveling to {country}. Which {number} most popular phrases should I learn to {task}?"
@@ -43,7 +43,7 @@ def match_task(text, audio):
 
 def main():
     demo = gr.Blocks()
-    with gr.Blocks(theme=gr.themes.Dark()) as demo:
+    with gr.Blocks(theme=gr.themes.Soft()) as demo:
         gr.Markdown("## Language Learning Model")
         gr.Markdown("### Assistant Task")
         gr.Markdown("### What do you want to do: order food in the restaurant, ask for direction, buy tickets?")
@@ -62,16 +62,16 @@ def main():
             with gr.Column():
                 response = gr.Button("Generate response", variant="primary")
             with gr.Column():
-                clear = gr.Button("Clear", variant="secondary")
+                clear = gr.ClearButton([text, audio, num, country])
 
         with gr.Row():
-            out = gr.Textbox(label="Response", placeholder="Response will appear here", readonly=True)
+            out = gr.Textbox(label="Response")
             task = match_task(text, audio)
         
         response.click(fn=llm, inputs=[task, country, num], outputs=out)
-        gr.ClearButton.add(clear, [text, audio, country, num, out])
 
-    demo.launch()
+
+    demo.launch(share=False, debug=True)
 
 if __name__ == "__main__":
     main()
