@@ -1,5 +1,5 @@
 # baker-sigma-llm
-# Assistant for Tasks ('travel')
+# Assistant Baker
 
 This project is an interactive application designed to help travelers communicate in foreign countries by generating useful phrases in the local language. Built with Gradio, it provides an easy-to-use interface where users can input tasks either by typing or recording their voice.
 
@@ -17,7 +17,7 @@ To run this project, you'll need Python installed on your machine along with the
 
 ```bash
 pip install gradio langchain_community whisper openai torch
-
+```
 
 ## How to Use
 
